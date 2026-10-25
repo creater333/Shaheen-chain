@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meri Kamai — Earnings App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>💰 <span id="appName">Meri Kamai</span></h1>
+  <div id="topbar">
+    <span id="who"></span>
+    <button id="logoutBtn" class="hidden" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <!-- AUTH -->
+  <section id="authView" class="card">
+    <h2>Welcome</h2>
+    <p>Login or create a free account to start earning points.</p>
+    <input id="username" placeholder="Username" autocomplete="username">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <input id="refCode" placeholder="Referral code (optional)">
+    <div class="row">
+      <button onclick="login()">Login</button>
+      <button class="secondary" onclick="register()">Register</button>
+    </div>
+    <p id="authMsg" class="msg"></p>
+    <p class="hint">Admin? Use the Admin button below after logging in with the admin account.</p>
+  </section>
+
+  <!-- USER DASHBOARD -->
+  <section id="dashView" class="hidden">
+    <div class="grid">
+      <div class="stat"><span>Points</span><b id="stPoints">0</b></div>
+      <div class="stat"><span id="stCoinLabel">Gold Coin (GLD)</span><b id="stCoin">0</b></div>
+      <div class="stat"><span>Commission (points)</span><b id="stComm">0</b></div>
+      <div class="stat"><span>My Referrals</span><b id="stRefs">0</b></div>
+    </div>
+    <p>Your referral code: <b id="myCode"></b> — share it, earn 10% / 5% / 2% on 3 levels!</p>
+    <button id="adminBtn" class="hidden" onclick="showAdmin()">🛠 Open Admin Panel</button>
+
+    <!-- Banner ad slot (driven by admin-enabled providers) -->
+    <div id="bannerSlot"></div>
+
+    <!-- Daily bonus -->
+    <div class="card">
+      <h2>🎁 Daily Bonus</h2>
+      <p id="bonusStatus"></p>
+      <button id="bonusBtn" onclick="claimBonus()">Claim Bonus</button>
+      <p id="bonusMsg" class="msg"></p>
+    </div>
+
+    <!-- Watch & earn -->
+    <div class="card">
+      <h2>🎬 Watch &amp; Earn</h2>
+      <p>Watch a rewarded ad and earn bonus points (amount set by admin).</p>
+      <div id="rewardedSlot"></div>
+      <p id="adMsg" class="msg"></p>
+    </div>
+
+    <nav class="tabs">
+      <button class="active" onclick="showTab('mining', this)">⛏ Mining</button>
+      <button onclick="showTab('tasks', this)">✅ Tasks</button>
+      <button onclick="showTab('wallet', this)">💰 Wallet</button>
+      <button onclick="showTab('refs', this)">👥 Referrals</button>
+    </nav>
+
+    <div id="tab-mining" class="card">
+      <h2>⛏ Mining</h2>
+      <p id="mineStatus"></p>
+      <p id="mineClaimInfo" class="hint"></p>
+      <div class="row">
+        <button onclick="mineStart()">Start Mining</button>
+        <button class="secondary" onclick="mineClaim()">Claim Mined Points</button>
+      </div>
+      <p id="mineMsg" class="msg"></p>
+    </div>
+
+    <div id="tab-tasks" class="card hidden">
+      <h2>✅ Tasks</h2>
+      <div id="taskList"></div>
+      <p id="taskMsg" class="msg"></p>
+    </div>
+
+    <div id="tab-wallet" class="card hidden">
+      <h2>💰 Wallet &amp; Coins</h2>
+      <p id="walletInfo"></p>
+      <h3>Convert Points to Coins</h3>
+      <input id="convPoints" type="number" placeholder="Points to convert">
+      <button onclick="convertPoints()">Convert</button>
+      <p id="convMsg" class="msg"></p>
+      <h3>Conversion History</h3>
+      <div id="convList"></div>
+      <h3>Withdrawal</h3>
+      <div id="wdSection">
+        <div id="wdComingSoon" class="hint hidden">Withdrawals are coming soon. Stay tuned!</div>
+        <div id="wdForm" class="hidden">
+          <select id="wdMethod">
+            <option>JazzCash</option><option>Easypaisa</option><option>Bank Transfer</option>
+          </select>
+          <input id="wdAccount" placeholder="Account / mobile number">
+          <input id="wdAmount" type="number" placeholder="Amount in points">
+          <button onclick="withdraw()">Request Withdrawal</button>
+        </div>
+      </div>
+      <p id="wdMsg" class="msg"></p>
+      <h3>Withdrawal History</h3>
+      <div id="wdList"></div>
+    </div>
+
+    <div id="tab-refs" class="card hidden">
+      <h2>👥 My Referrals &amp; Commissions</h2>
+      <div id="refList"></div>
+    </div>
+  </section>
+
+  <!-- Interstitial modal -->
+  <div id="interModal" class="modal hidden">
+    <div class="modal-box">
+      <span class="ad-tag">Sponsored</span>
+      <div id="interAdContent"></div>
+      <button onclick="closeInter()">Continue</button>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <section id="adminView" class="hidden">
+    <button class="secondary" onclick="showDash()">← Back to dashboard</button>
+    <h2>🛠 Admin Panel</h2>
+    <div class="grid">
+      <div class="stat"><span>Total Users</span><b id="aUsers">0</b></div>
+      <div class="stat"><span>Points in circulation</span><b id="aPoints">0</b></div>
+      <div class="stat"><span>Coins in circulation</span><b id="aCoins">0</b></div>
+      <div class="stat"><span>Pending withdrawals</span><b id="aPend">0</b></div>
+      <div class="stat"><span>Approved withdrawals</span><b id="aAppr">0</b></div>
+    </div>
+
+    <div class="card">
+      <h3>Users</h3>
+      <input id="userSearch" placeholder="Search username" oninput="loadAdminUsers()">
+      <div id="adminUserList"></div>
+    </div>
+
+    <div class="card">
+      <h3>Tasks (reward + cooldown)</h3>
+      <div id="adminTaskList"></div>
+      <input id="ntTitle" placeholder="New task title">
+      <input id="ntDesc" placeholder="Description">
+      <input id="ntReward" type="number" placeholder="Reward points">
+      <input id="ntCooldown" type="number" step="0.5" placeholder="Cooldown hours (24 = once a day)">
+      <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <div class="card">
+      <h3>Withdrawals</h3>
+      <div id="adminWdList"></div>
+    </div>
+
+    <div class="card">
+      <h3>Ads</h3>
+      <p class="hint">Toggle providers, set placement type and ad unit IDs. Custom ads render the snippet (or image + link) you enter. This web demo shows clearly labeled placeholder ads; real SDKs are integrated in the mobile app build.</p>
+      <div id="adminAdList"></div>
+      <label>Rewarded ad bonus points <input id="adBonus" type="number"></label>
+      <label>Interstitial after every N task completions <input id="adFreq" type="number"></label>
+      <button onclick="saveAds()">Save Ads</button>
+      <p id="adSetMsg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h3>Settings</h3>
+      <label>App name <input id="sAppName"></label>
+      <label>Mining on/off <select id="sMining"><option value="1">On</option><option value="0">Off</option></select></label>
+      <label>Points per hour (mining) <input id="sRate" type="number"></label>
+      <label>Max mining hours <input id="sMaxH" type="number"></label>
+      <label>Min claim interval (minutes) <input id="sClaimInt" type="number"></label>
+      <label>Level 1 % <input id="sL1" type="number"></label>
+      <label>Level 2 % <input id="sL2" type="number"></label>
+      <label>Level 3 % <input id="sL3" type="number"></label>
+      <label>Withdrawals on/off <select id="sWd"><option value="1">On</option><option value="0">Off</option></select></label>
+      <label>Min withdrawal (points) <input id="sMinWd" type="number"></label>
+      <label>Custom coin name <input id="sCoinName"></label>
+      <label>Custom coin symbol <input id="sCoinSym"></label>
+      <label>Points per 1 coin <input id="sPpc" type="number"></label>
+      <label>Min conversion (points) <input id="sMinConv" type="number"></label>
+      <label>Daily bonus points <input id="sBonusPts" type="number"></label>
+      <label>Daily bonus cooldown (hours) <input id="sBonusCd" type="number"></label>
+      <button onclick="saveSettings()">Save Settings</button>
+      <p id="setMsg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h3>Change Admin Password</h3>
+      <input id="newPass" type="password" placeholder="New password">
+      <button onclick="changePass()">Change Password</button>
+      <p id="passMsg" class="msg"></p>
+    </div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

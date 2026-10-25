@@ -1,0 +1,263 @@
+/* Meri Kamai — Premium theme
+   Gold-on-midnight money app look. All class names / IDs are unchanged
+   so the app logic keeps working exactly as before. */
+* { box-sizing: border-box; }
+
+:root {
+  --bg0: #070b16;
+  --bg1: #0c1226;
+  --card: rgba(255, 255, 255, 0.045);
+  --card-border: rgba(255, 255, 255, 0.09);
+  --text: #eef1f8;
+  --muted: #94a3b8;
+  --gold: #f5c542;
+  --gold-2: #e8a020;
+  --gold-soft: rgba(245, 197, 66, 0.14);
+  --green: #22c55e;
+  --red: #f87171;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  --radius: 20px;
+}
+
+html { background: #070b16; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 420px at 50% -120px, rgba(245, 197, 66, 0.16), transparent 65%),
+    linear-gradient(180deg, var(--bg1), var(--bg0) 55%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Header ---------- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(7, 11, 22, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--card-border);
+}
+header h1 {
+  font-size: 21px;
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ffe082, var(--gold) 55%, var(--gold-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+#topbar { display: flex; align-items: center; gap: 10px; }
+#who { color: var(--muted); font-size: 14px; }
+
+/* ---------- Layout ---------- */
+main { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; }
+
+h2 { font-size: 21px; letter-spacing: -0.02em; margin: 4px 0 10px; }
+h3 { font-size: 16px; letter-spacing: -0.01em; margin: 18px 0 8px; color: #f8fafc; }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: var(--shadow);
+  animation: rise 0.45s ease both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hidden { display: none !important; }
+
+/* Login card: centered hero */
+#authView { max-width: 460px; margin: 56px auto; text-align: left; }
+#authView h2 {
+  font-size: 28px;
+  background: linear-gradient(90deg, #ffe082, var(--gold) 60%, var(--gold-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Stats ---------- */
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 16px 14px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+.stat:hover { transform: translateY(-2px); }
+.stat::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.stat span { display: block; font-size: 12.5px; color: var(--muted); letter-spacing: 0.02em; }
+.stat b { display: block; margin-top: 6px; font-size: 24px; letter-spacing: -0.02em; color: var(--gold); }
+
+/* ---------- Forms ---------- */
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 6px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+input::placeholder { color: #64748b; }
+
+/* ---------- Buttons ---------- */
+button {
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffd76a, var(--gold) 55%, var(--gold-2));
+  color: #231a02;
+  font-weight: 800;
+  font-size: 14.5px;
+  font-family: inherit;
+  cursor: pointer;
+  margin: 4px 4px 4px 0;
+  box-shadow: 0 8px 20px rgba(245, 197, 66, 0.25);
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+button:hover { transform: translateY(-1px); filter: brightness(1.06); }
+button:active { transform: translateY(0); }
+button.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  box-shadow: none;
+  border: 1px solid var(--card-border);
+}
+button.danger {
+  background: linear-gradient(135deg, #fca5a5, #ef4444);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+}
+#logoutBtn { box-shadow: none; padding: 8px 14px; }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- Tabs (pill bar) ---------- */
+.tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+}
+.tabs button {
+  flex: 1 1 auto;
+  margin: 0;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  border-radius: 11px;
+  font-weight: 700;
+}
+.tabs button:hover { color: var(--text); filter: none; }
+.tabs button.active {
+  background: linear-gradient(135deg, #ffd76a, var(--gold) 55%, var(--gold-2));
+  color: #231a02;
+  box-shadow: 0 6px 16px rgba(245, 197, 66, 0.3);
+}
+
+/* ---------- Text helpers ---------- */
+.msg { color: var(--gold); min-height: 1em; font-size: 14px; }
+.hint { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.item {
+  border-top: 1px solid var(--card-border);
+  padding: 14px 4px;
+  line-height: 1.5;
+}
+.item:first-child { border-top: 0; }
+.item button { margin-top: 8px; }
+label { display: block; margin: 10px 0; font-size: 13.5px; color: var(--muted); }
+label input, label select { margin-top: 5px; }
+
+/* ---------- Ads ---------- */
+.ad-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1.5px dashed rgba(245, 197, 66, 0.55);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 0;
+  text-align: center;
+}
+.ad-card.banner { font-size: 15px; }
+.ad-card.interstitial { font-size: 17px; }
+.ad-card img { max-width: 100%; border-radius: 10px; }
+.ad-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffd76a, var(--gold));
+  color: #231a02;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Modal ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 16px;
+}
+.modal-box {
+  background: #131a30;
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 620px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  #authView { margin-top: 28px; }
+  .card { padding: 16px; }
+  header h1 { font-size: 18px; }
+  #who { display: none; }
+}

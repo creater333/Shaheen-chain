@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: shaheenchain-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: SHAHEENCHAIN_ADMIN_KEY
+        sync: false
+      - key: EARNINGS_SECRET
+        generateValue: true
